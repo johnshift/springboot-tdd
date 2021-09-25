@@ -6,6 +6,7 @@ Workflow + best practices
 - [ ] coverage report
 - [ ] dockerized mysql for tests
 - [ ] dev/prod separation deployments
+- [X] use ```@Valid``` annotation for validation
 
 ## user
 - ```id```
