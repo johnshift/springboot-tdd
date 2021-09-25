@@ -9,9 +9,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 class SpringbootTddApplicationTests {
 
   @Test
-  void contextLoads() {
+  void mainTest() {
+
     int two = 2;
     assertEquals(2, two);
+
+    SpringbootTddApplication.main(new String[] {});
   }
 
 }

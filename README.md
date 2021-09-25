@@ -1,12 +1,14 @@
 # SpringBoot TDD
 Workflow + best practices
-- [ ] feature-based folder
-- [ ] format + checkstyle + lint 
+- [x] feature-based folder
+- [x] formatter: eclipse-java-google-style
+- [x] checkstyle: IDE + google_checkstyle
+- [x] linting: sonarlint
+- [ ] coverage: run ```mvn jacoco:prepare-agent test install jacoco:report```
 - [ ] business logic in services only
-- [ ] coverage report
 - [ ] dockerized mysql for tests
 - [ ] dev/prod separation deployments
-- [X] use ```@Valid``` annotation for validation
+- [ ] use ```@Valid``` annotation for validation
 
 ## user
 - ```id```
