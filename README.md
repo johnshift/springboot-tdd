@@ -4,7 +4,7 @@ Workflow + best practices
 - [x] formatter: eclipse-java-google-style
 - [x] checkstyle: IDE + google_checkstyle
 - [x] linting: sonarlint
-- [ ] coverage: run ```mvn jacoco:prepare-agent test install jacoco:report```
+- [x] coverage: run ```mvn jacoco:prepare-agent test install jacoco:report```
 - [ ] business logic in services only
 - [ ] dockerized mysql for tests
 - [ ] dev/prod separation deployments
