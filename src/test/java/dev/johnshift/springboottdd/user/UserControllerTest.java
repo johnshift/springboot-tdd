@@ -1,5 +1,7 @@
 package dev.johnshift.springboottdd.user;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,7 +18,13 @@ public class UserControllerTest {
   MockMvc mockMvc;
 
   @MockBean
-  UserService svc;
+  UserRepository repo;
+
+  @Test
+  public void someTest() {
+    int two = 2;
+    assertEquals(two, 2);
+  }
 
   // VALIDATION Errors
   // @Test

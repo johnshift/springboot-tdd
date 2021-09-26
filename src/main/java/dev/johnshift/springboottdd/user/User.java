@@ -6,7 +6,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +19,8 @@ import org.springframework.stereotype.Component;
 @Entity
 @Component
 @Table(name = "users")
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
   @Id

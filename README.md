@@ -21,6 +21,19 @@ Workflow + best practices
 - build: ```mvn clean package -Pprod```
 - jvm: ```-Dspring.profiles.active=prod```
 
+## Running Tests
+### Unit Tests
+- all unit tests: ```mvn clean test```
+- specific tests: ```mvn clean test -Dtest=<test1>,<test2>```
+- package tests: ```mvn clean test -Dtest="com.example.demo.feature.**"```
+- skip unit tests: ```mvn clean install -DskipUnitTests```
+### Integration Tests
+- all integration tests only: ```mvn failsafe:integration-test failsafe:verify -e```
+- skip integration tests: ```mvn clean install -DskipIntegrationTests```
+### Unit + Integration Tests
+- both: ```mvn verify```
+- skip both: ```mvn install -DskipTests```
+
 ## user
 - ```id```
 - ```username```
