@@ -33,8 +33,17 @@ Workflow + best practices
 
 ## Writing Tests
 - Only use ```@Mock``` on unit-tested components
+- Unit tests should not use Spring: no ```SpringBootTest```, ```MockBean``` and ```Autowired``` 
+- All classes should only use ```@RequiredArgsConstructor``` and ```private final``` fields
+- Use ```@ExtendWith(MockitoExtension.class)```  to enable ```@Mock``` annotation. 
+- Use ```InjectMocks``` for components requiring mocked dependency
 - Mid unit-integration-test types should ```@Mock``` all external dependencies
+- Only test atleast one success/failure case for incoming requests on ```Controllers```.  
+  Validations and logic for incoming requests should be examined on unit-tests.
+- Check serialization for each json response type of ```Controllers``` 
 - Integration Tests should reflect overall behaviour of grouped components
+- ```Repositories``` are only tested on integration-tests since JPA does the heavy lifting.  
+  Testcontainers are more suited to reflect the production database, hence integration-test.
 - End-to-end tests should mirror production environment 
 
 ## paths
@@ -49,3 +58,5 @@ Workflow + best practices
 - ```username```
 - ```bio```
 
+## useful guides
+- [Proper Unit Testing](https://www.arhohuttunen.com/spring-boot-unit-testing/)
