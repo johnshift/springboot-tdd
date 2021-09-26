@@ -10,6 +10,17 @@ Workflow + best practices
 - [ ] dev/prod separation deployments
 - [ ] use ```@Valid``` annotation for validation
 
+## SpringBoot Profiles
+- ```SPRING_PROFILES_ACTIVE``` env for ConfigMaps
+  ### Dev
+- run: ```mvn spring-boot:run -Dspring-boot.run.profiles=dev```
+- build: ```mvn clean package -Pdev```
+- jvm: ```-Dspring.profiles.active=dev```
+- ### Production
+- run: ```mvn spring-boot:run -Dspring-boot.run.profiles=prod```
+- build: ```mvn clean package -Pprod```
+- jvm: ```-Dspring.profiles.active=prod```
+
 ## user
 - ```id```
 - ```username```
