@@ -30,6 +30,17 @@
 			<optional>true</optional>
 		</dependency>
 
+    <!-- DB -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.26</version>
+    </dependency>
+
     <!-- REDUCE BOILERPLATE -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
