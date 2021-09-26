@@ -29,6 +29,7 @@ Workflow + best practices
 - skip unit tests: ```mvn clean install -DskipUnitTests```
 ### Integration Tests
 - all integration tests only: ```mvn failsafe:integration-test failsafe:verify -e```
+- run with profile: ```mvn failsafe:integration-test failsafe:verify -Dspring.profiles.active=prod```
 - skip integration tests: ```mvn clean install -DskipIntegrationTests```
 ### Unit + Integration Tests
 - both: ```mvn verify```
