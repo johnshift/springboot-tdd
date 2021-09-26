@@ -37,6 +37,22 @@ public class UserControllerTest {
   @Test
   public void Should_ReturnError_When_Username_AlreadyExists() throws Exception {}
 
+  @Test
+  public void Should_ReturnError_When_Username_Exceed32() throws Exception {}
+
+  @Test
+  public void Should_ReturnError_When_Password_Exceed64() throws Exception {}
+
+  @Test
+  public void Should_ReturnError_When_FirstName_Exceed32() throws Exception {}
+
+  @Test
+  public void Should_ReturnError_When_LastName_Exceed32() throws Exception {}
+
+  @Test
+  public void Should_ReturnError_When_Description_Exceed255() throws Exception {}
+
+
   // NOT FOUND Errors
   @Test
   public void GET_User_Should_ReturnError_When_NotFound() throws Exception {}
