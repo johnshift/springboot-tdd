@@ -5,9 +5,9 @@ Workflow + best practices
 - [x] checkstyle: IDE + google_checkstyle
 - [x] linting: sonarlint
 - [x] coverage: run ```mvn jacoco:prepare-agent test install jacoco:report```
+- [x] dockerized mysql for tests
+- [x] dev/prod separation deployments
 - [ ] business logic in services only
-- [ ] dockerized mysql for tests
-- [ ] dev/prod separation deployments
 - [ ] use ```@Valid``` annotation for validation
 
 ## SpringBoot Profiles
