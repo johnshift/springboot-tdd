@@ -13,14 +13,14 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 /** ... */
+@Entity
 @Getter
 @Setter
-@Entity
 @Component
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class UserEntity {
 
   @Id
   @Column(name = "id")
