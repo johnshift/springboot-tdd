@@ -50,17 +50,7 @@ Tests:
 - It touches the file system
 - It can’t run at the same time as any of your other unit tests
 - You have to do special things to your environment (such as editing config files) to run it
-- 
-## profiles (changed strat to testcontainers+local_dev only)
-Only included for future reference:
-- `mvn spring-boot:run -Dspring-boot.run.profiles=dev`
-- `mvn spring-boot:run -Dspring-boot.run.profiles=prod`
-- `mvn clean package -Pdev`
-- `mvn clean package -Pprod`
-- `-Dspring.profiles.active=dev`
-- `-Dspring.profiles.active=prod`
-- `SPRING_PROFILES_ACTIVE` ConfigMaps
-- 
+  
 ## paths
 - `GET /users/{username}`
 - `GET /users`
