@@ -94,9 +94,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-          <!-- wait for testcontainers 3mins -->
-          <wait>1000</wait>
-          <maxAttempts>180</maxAttempts>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
@@ -134,8 +131,6 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.1</version>
         <configuration>
-          <!-- https://stackoverflow.com/questions/46831762/maven-build-and-maven-failsafe-plugin-the-forked-vm-terminated-without-properl/51099726 -->
-          <forkedProcessExitTimeoutInSeconds>120</forkedProcessExitTimeoutInSeconds>
           <skipTests>${skipUnitTests}</skipTests>
         </configuration>
       </plugin>
@@ -145,7 +140,7 @@
         <version>2.22.1</version>
         <configuration>
           <includes>
-            <include>**/*IntegrationTest.java</include>
+            <include>**/*IT.java</include>
           </includes>
           <skipTests>${skipIntegrationTests}</skipTests>
         </configuration>

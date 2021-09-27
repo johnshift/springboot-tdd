@@ -16,7 +16,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Testcontainers
 @Sql({"/db/users_schema.sql", "/db/users_sample.sql"})
-public class UserIntegrationTest {
+public class UserIT {
 
   @Autowired
   WebTestClient webTestClient;
@@ -35,6 +35,13 @@ public class UserIntegrationTest {
     registry.add("spring.datasource.password", container::getPassword);
   }
 
+
+  // @Test
+  // public void someTest() {
+  //   int two = 2;
+  //   assertEquals(two, 2);
+  // }
+  
   @Test
   public void shouldReturnAllUsers() throws Exception {
     
