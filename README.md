@@ -46,6 +46,14 @@ Workflow + best practices
   Testcontainers are more suited to reflect the production database, hence integration-test.
 - End-to-end tests should mirror production environment 
 
+
+## integration-tests:
+- It talks to the database
+- It communicates across the network
+- It touches the file system
+- It can’t run at the same time as any of your other unit tests
+- You have to do special things to your environment (such as editing config files) to run it
+
 ## paths
 - ```GET /users/{username}```
 - ```GET /users```
