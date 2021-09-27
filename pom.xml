@@ -48,10 +48,6 @@
         <artifactId>mysql-connector-java</artifactId>
         <version>8.0.26</version>
     </dependency>
-    <!-- <dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
-		</dependency> -->
 
     <!-- REDUCE BOILERPLATE -->
 		<dependency>
@@ -98,6 +94,9 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+          <!-- wait for testcontainers 3mins -->
+          <wait>1000</wait>
+          <maxAttempts>180</maxAttempts>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
@@ -133,13 +132,17 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.22.1</version>
         <configuration>
+          <!-- https://stackoverflow.com/questions/46831762/maven-build-and-maven-failsafe-plugin-the-forked-vm-terminated-without-properl/51099726 -->
+          <forkedProcessExitTimeoutInSeconds>120</forkedProcessExitTimeoutInSeconds>
           <skipTests>${skipUnitTests}</skipTests>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.22.1</version>
         <configuration>
           <includes>
             <include>**/*IntegrationTest.java</include>
@@ -155,28 +158,8 @@
           </execution>
       </executions>
       </plugin>
-
       
 		</plugins>
 	</build>
-
-  <!-- PROFILES -->
-  <profiles>
-    <profile>
-      <id>dev</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <properties>
-        <spring.profiles.active>dev</spring.profiles.active>
-      </properties>
-    </profile>
-    <profile>
-      <id>prod</id>
-      <properties>
-        <spring.profiles.active>prod</spring.profiles.active>
-      </properties>
-    </profile>
-  </profiles>
 
 </project>
