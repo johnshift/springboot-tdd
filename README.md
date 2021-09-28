@@ -25,21 +25,27 @@ Code:
 - `Repositories` should contain all predefined/custom DB logic
 - Unless you find a way to progmatically run `checkstyles` and `sonarlint`,  
   make sure push code with no warnings from ide lints.
+- Use [easy-random](https://github.com/j-easy/easy-random) for fast creation of pojo's
 
 Tests:
 - Only use `@Mock` on unit-tested components
 - Unit tests should not use Spring: no `SpringBootTest`, `MockBean` and `Autowired` 
 - All classes should only use `@RequiredArgsConstructor` and `private final` fields
 - Use `@ExtendWith(MockitoExtension.class)`  to enable `@Mock` annotation. 
-- Use `InjectMocks` for components requiring mocked dependency
+- Use `InjectMocks` for components requiring mocked 
+- `Validations and logic` for incoming requests should be examined at `unit-tests`
 - Mid unit-integration-test types should `@Mock` all external dependencies
 - Only test atleast one success/failure case for incoming requests on `Controllers`.  
-  Validations and logic for incoming requests should be examined on unit-tests
+- `Controllers`: `MockMvc` for unit-tests, `WebTestClient` for integration-test
 - Check serialization for each json response type of `Controllers` 
+- `Mocks` only for unit-tests (e.g. services, logic, validations)
+- `Test slices` for mid unit-integration-tests (e.g. controllers, jpa)
+- `SpringBootTest` for integration-tests (e.g. testcontainers, external services)
 - Integration Tests should reflect overall behaviour of grouped components
 - `Repositories` are only tested on integration-tests since JPA does the heavy lifting.  
   Testcontainers are more suited to reflect the production database, hence integration-test.
-- End-to-end tests should mirror production environment 
+- End-to-end tests should represent pre-production environment 
+- Always prefer to use `JUnit5`. `@Test` annotation should point to `org.junit.jupiter.api.Test`
 
 ## Running Tests
 - Use `mvn clean install > log-file.log` in CI/CD  
@@ -65,8 +71,16 @@ Tests:
 - `username`
 - `bio`
 
+
+## notes
+- put `"coverage-gutters.coverageReportFileName": "target/site/jacoco/index.html"`  
+  in `vscode settings.json` when developing in Java to enable coverage gutters
+
 ## useful guides
-- Unit Tests: [Proper Unit Testing](https://www.arhohuttunen.com/spring-boot-unit-testing/)
+- Testing: 
+  - [Test Slices](https://reflectoring.io/spring-boot-test/)
+  - [Proper Unit Testing](https://www.arhohuttunen.com/spring-boot-unit-testing/)
+  - [Unit Test Naming Best Practices](https://stackoverflow.com/q/155436)
 - Architecture:
   - [DTO Pattern](https://www.baeldung.com/java-dto-pattern)
   - [Mapstruct Quick Guide](https://www.baeldung.com/mapstruct)

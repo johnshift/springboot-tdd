@@ -2,18 +2,16 @@ package dev.johnshift.springboottdd.user;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
+import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
-
-import lombok.RequiredArgsConstructor;
 
 /** ... */
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-  UserMapper mapper = Mappers.getMapper(UserMapper.class);
+  private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
   private final UserRepository userRepository;
 
@@ -34,17 +32,9 @@ public class UserService {
   }
 
   /** . */
-  public UserDTO getUserById(long id) {
-
-    UserEntity userEntity = userRepository.findById(id).orElseThrow();
-
-    return mapper.toDTO(userEntity);
-  }
-
-  /** . */
   public void deleteUserById(long id) {
 
-    if (!userExists(id)) {
+    if (!checkUserExists(id)) {
       throw new NoSuchElementException();
     }
 
@@ -58,7 +48,7 @@ public class UserService {
 
     long id = userDTO.getId();
 
-    if (!userExists(id)) {
+    if (!checkUserExists(id)) {
       throw new NoSuchElementException();
     }
 
@@ -71,7 +61,15 @@ public class UserService {
   }
 
   /** . */
-  public boolean userExists(long id) {
+  public UserDTO getUserById(long id) {
+
+    UserEntity userEntity = userRepository.findById(id).orElseThrow();
+
+    return mapper.toDTO(userEntity);
+  }
+
+  /** . */
+  public boolean checkUserExists(long id) {
     return userRepository.findById(id).isPresent();
   }
 }
