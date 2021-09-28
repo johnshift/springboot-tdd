@@ -40,29 +40,25 @@ public class UserController {
 
   /** ... */
   @PostMapping("/users")
-  public ResponseEntity<UserDTO> handleCreateUser(@RequestBody UserDTO user) {
-
-    UserDTO createdUser = svc.createUser(user);
-
-    return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+  @ResponseStatus(HttpStatus.CREATED)
+  public UserDTO handleCreateUser(@RequestBody UserDTO user) {
+    return svc.createUser(user);
   }
 
   /** ... */
   @DeleteMapping("/users/{id}")
-  public ResponseEntity<UserDTO> handleDeleteUser(@PathVariable(name = "id") long id) {
+  public ResponseEntity<Object> handleDeleteUser(@PathVariable(name = "id") long id) {
+
+    svc.deleteUserById(id);
 
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  /** 
-   * Only `bio` field should be updateable. 
-   */
+  /** Only `bio` field should be updateable. */
   @PutMapping("/users")
-  public ResponseEntity<UserDTO> handleUpdateUser(@RequestBody UserDTO user) {
+  public UserDTO handleUpdateUser(@RequestBody UserDTO user) {
 
-    UserDTO updatedUser = svc.updateUser(user);
-
-    return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    return svc.updateUser(user);
   }
 
   // ======================================================================
