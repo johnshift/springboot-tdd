@@ -1,7 +1,8 @@
 package dev.johnshift.springboottdd.user;
 
+import dev.johnshift.springboottdd.exceptions.Errors;
+import dev.johnshift.springboottdd.exceptions.NotFoundException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class UserService {
   public UserDTO createUser(UserDTO userDTO) {
     
     UserEntity userEntity = userRepository.save(mapper.toEntity(userDTO));
+    // todo: throw exception if save failed
 
     return mapper.toDTO(userEntity);
   }
@@ -35,7 +37,7 @@ public class UserService {
   public void deleteUserById(long id) {
 
     if (!checkUserExists(id)) {
-      throw new NoSuchElementException();
+      throw new NotFoundException(Errors.USER_NOTFOUND);
     }
 
     userRepository.deleteById(id);
@@ -49,12 +51,13 @@ public class UserService {
     long id = userDTO.getId();
 
     if (!checkUserExists(id)) {
-      throw new NoSuchElementException();
+      throw new NotFoundException(Errors.USER_NOTFOUND);
     }
 
-    UserEntity userEntity = userRepository.findById(id).orElseThrow();
-    userEntity.setBio(userDTO.getBio());
+    UserEntity userEntity = userRepository.findById(id)
+        .orElseThrow(() -> new NotFoundException(Errors.USER_NOTFOUND));
 
+    userEntity.setBio(userDTO.getBio());
     userRepository.save(userEntity);
 
     return mapper.toDTO(userEntity);
@@ -63,7 +66,8 @@ public class UserService {
   /** . */
   public UserDTO getUserById(long id) {
 
-    UserEntity userEntity = userRepository.findById(id).orElseThrow();
+    UserEntity userEntity = userRepository.findById(id)
+        .orElseThrow(() -> new NotFoundException(Errors.USER_NOTFOUND));
 
     return mapper.toDTO(userEntity);
   }

@@ -8,10 +8,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
+import dev.johnshift.springboottdd.exceptions.NotFoundException;
 import io.github.glytching.junit.extension.random.Random;
 import io.github.glytching.junit.extension.random.RandomBeansExtension;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +43,7 @@ public class UserServiceTest {
   List<UserEntity> userEntities;
 
   @Test
-  public void shouldReturnUserDTOsWhenGetAllUsers() {
+  public void return_userDTOs_when_getAllUsers() {
 
     // arrange
     when(userRepository.findAll()).thenReturn(userEntities);
@@ -58,7 +58,7 @@ public class UserServiceTest {
   }
 
   @Test
-  public void shouldReturnUserDTOWhenCreateUser() {
+  public void return_userDTO_when_createUser() {
 
     // arrange
     UserEntity userEntity = new UserEntity();
@@ -77,7 +77,7 @@ public class UserServiceTest {
   }
 
   @Test
-  public void shouldSucceedWhenDeleteUserById() {
+  public void succeed_when_deleteUserById() {
 
     // arrange
     when(userRepository.findById(userEntity.getId())).thenReturn(Optional.of(userEntity));
@@ -88,7 +88,7 @@ public class UserServiceTest {
   }
 
   @Test
-  public void shouldFailWhenDeleteUserByIdNotFound() {
+  public void given_userNotFound_when_deleteUserById_then_throwNotFoundException() {
 
     // arrange
     long id = userEntity.getId();
@@ -97,7 +97,7 @@ public class UserServiceTest {
 
     // // act
     // // assert
-    assertThrows(NoSuchElementException.class, () -> svc.deleteUserById(id));
+    assertThrows(NotFoundException.class, () -> svc.deleteUserById(id));
   }
 
   @Test
@@ -121,7 +121,7 @@ public class UserServiceTest {
   }
   
   @Test
-  public void given_NonExistingUser_When_UpdateUser_Then_ThrowException() {
+  public void given_userNotFound_when_updateUser_then_throwNotFoundException() {
     
     // arrange
     long id = userEntity.getId();
@@ -133,11 +133,11 @@ public class UserServiceTest {
 
     // act
     // assert
-    assertThrows(NoSuchElementException.class, () -> svc.updateUser(updatedUser));
+    assertThrows(NotFoundException.class, () -> svc.updateUser(updatedUser));
   }
 
   @Test
-  public void given_NonExistingUser_When_checkUserExists_Then_ReturnFalse() {
+  public void given_userNotFound_when_checkUserExists_then_returnFalse() {
     
     // arrange
     long id = 69L;
@@ -151,7 +151,7 @@ public class UserServiceTest {
   }
 
   @Test
-  public void given_ExistingUser_When_checkUserExists_Then_ReturnTrue() {
+  public void given_userExists_when_checkUserExists_then_returnTrue() {
     
     // arrange
     long id = userEntity.getId();
@@ -165,7 +165,7 @@ public class UserServiceTest {
   }
 
   @Test
-  public void given_ExistingUser_When_getUserById_Then_ReturnUser() {
+  public void given_userExists_when_getUserById_then_returnUser() {
 
     // arrange
     long id = userEntity.getId();
@@ -181,13 +181,13 @@ public class UserServiceTest {
   }
 
   @Test
-  public void given_NonExistingUser_When_getUserById_Then_Throw() {
+  public void given_userNotFound_when_getUserById_then_throwNotFoundException() {
     // arrange
     long id = 69L;
     when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
     // act
     // assert
-    assertThrows(NoSuchElementException.class, () -> svc.getUserById(id));
+    assertThrows(NotFoundException.class, () -> svc.getUserById(id));
   }
 }
