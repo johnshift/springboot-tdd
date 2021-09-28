@@ -1,16 +1,26 @@
 package dev.johnshift.springboottdd.user;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import io.github.glytching.junit.extension.random.Random;
+import io.github.glytching.junit.extension.random.RandomBeansExtension;
+import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-// import org.springframework.context.annotation.Import;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 /** ... */
-// @Import(User.class)
+@ExtendWith(SpringExtension.class)
+@ExtendWith(RandomBeansExtension.class)
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
 
@@ -18,57 +28,66 @@ public class UserControllerTest {
   MockMvc mockMvc;
 
   @MockBean
-  UserRepository repo;
+  UserRepository userRepository;
+
+  // @Autowired
+  @MockBean
+  UserService svc;
+
+  @Random
+  UserDTO userDTO;
+
+  @Random(type = UserDTO.class, size = 1)
+  List<UserDTO> userDTOs;
 
   @Test
-  public void someTest() {
-    int two = 2;
-    assertEquals(two, 2);
+  public void should_returnUsers_when_handleGetUsers() throws Exception {
+
+    // arrange
+    when(svc.getAllUsers()).thenReturn(userDTOs);
+
+    // act
+    mockMvc.perform(get("/users"))
+
+        // assert
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.length()", is(1)))
+        .andExpect(jsonPath("$.[0].id", is(userDTOs.get(0).getId())))
+        .andExpect(jsonPath("$.[0].bio", is(userDTOs.get(0).getBio())))
+        .andExpect(jsonPath("$.[0].username", is(userDTOs.get(0).getUsername())));
   }
 
-  // VALIDATION Errors
-  // @Test
-  // public void Should_ReturnError_When_Username_Empty() throws Exception {}
+  @Test
+  public void given_existingUser_when_handleGetUser_then_returnUser() throws Exception {
+    
+    // arrange
+    when(svc.getUserById(anyLong())).thenReturn(userDTO);
 
-  // @Test
-  // public void Should_ReturnError_When_Bio_Empty() throws Exception {}
+    // act
+    mockMvc.perform(get("/users/" + userDTO.getId()))
 
-  // @Test
-  // public void Should_ReturnError_When_Username_AlreadyExists() throws Exception
-  // {}
+        // assert
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id", is(userDTO.getId())))
+        .andExpect(jsonPath("$.bio", is(userDTO.getBio())))
+        .andExpect(jsonPath("$.username", is(userDTO.getUsername())));
+  }
 
-  // @Test
-  // public void Should_ReturnError_When_Username_Exceed32() throws Exception {}
+  @Test
+  public void given_nonExistingUser_when_handleGetUser_then_throwException() throws Exception {
 
-  // @Test
-  // public void Should_ReturnError_When_Bio_Exceed255() throws Exception {}
+    // arrange
+    when(svc.getUserById(anyLong())).thenThrow(new UserException(UserException.NOT_FOUND));
 
-  // // NOT FOUND Errors
-  // @Test
-  // public void GET_User_Should_ReturnError_When_NotFound() throws Exception {}
+    // act
+    mockMvc.perform(get("/users/{id}", userDTO.getId().toString()))
 
-  // @Test
-  // public void PUT_User_Should_ReturnError_When_NotFound() throws Exception {}
-
-  // @Test
-  // public void DELETE_User_Should_ReturnError_When_NotFound() throws Exception
-  // {}
-
-  // // SUCCESS Requests
-  // @Test
-  // public void GET_Users_Should_ReturnAllUsers() throws Exception {}
-
-  // @Test
-  // public void GET_Should_ReturnUser_Given_UsernamePathVariable() throws
-  // Exception {}
-
-  // @Test
-  // public void POST_Should_CreateUser_and_ReturnId() throws Exception {}
-
-  // @Test
-  // public void PUT_Should_UpdateUser_and_ReturnUpdated() throws Exception {}
-
-  // @Test
-  // public void DELETE_Should_DeleteUser_and_ReturnDeleted() throws Exception {}
+        // assert
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.status", is("NOT_FOUND")))
+        .andExpect(jsonPath("$.error", is("User not found")))
+        .andExpect(jsonPath("$.info", is("some info")));
+        
+  }
 
 }

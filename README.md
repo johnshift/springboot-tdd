@@ -25,7 +25,9 @@ Code:
 - `Repositories` should contain all predefined/custom DB logic
 - Unless you find a way to progmatically run `checkstyles` and `sonarlint`,  
   make sure push code with no warnings from ide lints.
-- Use [easy-random](https://github.com/j-easy/easy-random) for fast creation of pojo's
+- Use `@ControllerAdvice` for Global Exception handler i.e. malformed requests, invalid path etc etc  
+  otherwise use `@ExceptionHandlers` per feature controller
+- Use [easy-random](https://github.com/j-easy/easy-random) for fast creation of pojo's in tests
 
 Tests:
 - Only use `@Mock` on unit-tested components

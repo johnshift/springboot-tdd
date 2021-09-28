@@ -8,7 +8,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-import dev.johnshift.springboottdd.exceptions.NotFoundException;
 import io.github.glytching.junit.extension.random.Random;
 import io.github.glytching.junit.extension.random.RandomBeansExtension;
 import java.util.List;
@@ -88,7 +87,7 @@ public class UserServiceTest {
   }
 
   @Test
-  public void given_userNotFound_when_deleteUserById_then_throwNotFoundException() {
+  public void given_userNotFound_when_deleteUserById_then_throwUserException() {
 
     // arrange
     long id = userEntity.getId();
@@ -97,7 +96,7 @@ public class UserServiceTest {
 
     // // act
     // // assert
-    assertThrows(NotFoundException.class, () -> svc.deleteUserById(id));
+    assertThrows(UserException.class, () -> svc.deleteUserById(id));
   }
 
   @Test
@@ -121,7 +120,7 @@ public class UserServiceTest {
   }
   
   @Test
-  public void given_userNotFound_when_updateUser_then_throwNotFoundException() {
+  public void given_userNotFound_when_updateUser_then_throwUserException() {
     
     // arrange
     long id = userEntity.getId();
@@ -133,7 +132,7 @@ public class UserServiceTest {
 
     // act
     // assert
-    assertThrows(NotFoundException.class, () -> svc.updateUser(updatedUser));
+    assertThrows(UserException.class, () -> svc.updateUser(updatedUser));
   }
 
   @Test
@@ -181,13 +180,8 @@ public class UserServiceTest {
   }
 
   @Test
-  public void given_userNotFound_when_getUserById_then_throwNotFoundException() {
-    // arrange
-    long id = 69L;
-    when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
-
-    // act
-    // assert
-    assertThrows(NotFoundException.class, () -> svc.getUserById(id));
+  public void given_userNotFound_when_getUserById_then_throwUserException() {
+  
+    assertThrows(UserException.class, () -> svc.getUserById(99999L));
   }
 }
