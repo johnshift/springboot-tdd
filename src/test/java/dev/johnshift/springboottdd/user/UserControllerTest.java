@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.johnshift.springboottdd.exceptions.AppExceptionHandler;
 import java.util.Arrays;
 import java.util.List;
 import org.jeasy.random.EasyRandom;
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -95,34 +97,30 @@ public class UserControllerTest {
 
     // arrange
     when(svc.getUserById(anyLong())).thenThrow(new UserException(UserException.NOT_FOUND));
+    String info = "No user found with id = " + sampleUser.getId();
 
     // act
     mockMvc.perform(get("/users/{id}", sampleUser.getId().toString()))
 
         // assert
         .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.status", is("NOT_FOUND")))
-        .andExpect(jsonPath("$.error", is("User not found")))
-        .andExpect(jsonPath("$.info", is("some info")))
+        .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+        .andExpect(jsonPath("$.error", is(UserException.NOT_FOUND)))
+        .andExpect(jsonPath("$.info", is(info)))
         .andExpect(jsonPath("$.timestamp").exists());
-        
   }
 
   @Test
   public void handleGetUser_invalidIdType_throwTypeMismatch() throws Exception {
 
-    String statusStr = "BAD_REQUEST";
-    String errorStr = "Invalid type mismatch";
-    String idPathVariable = "asdf";
-    String infoStr = "'id' parameter declared with invalid value of '" + idPathVariable + "'";
+    String infoStr = "'id' parameter declared with invalid value of 'asdf'";
 
-    mockMvc.perform(get("/users/asdf"))
+    mockMvc.perform(get("/users/{id}", "asdf"))
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.status", is(statusStr)))
-        .andExpect(jsonPath("$.error", is(errorStr)))
+        .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
+        .andExpect(jsonPath("$.error", is(AppExceptionHandler.INVALID_TYPE)))
         .andExpect(jsonPath("$.info", is(infoStr)))
         .andExpect(jsonPath("$.timestamp").exists());
-
   }
 
   @Test
@@ -162,7 +160,7 @@ public class UserControllerTest {
 
         // assert
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
+        .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
         .andExpect(jsonPath("$.error", is(UserException.USERNAME_REQUIRED)))
         .andExpect(jsonPath("$.info", is("username = null")))
         .andExpect(jsonPath("$.timestamp").exists());
@@ -186,7 +184,7 @@ public class UserControllerTest {
 
         // assert
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
+        .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
         .andExpect(jsonPath("$.error", is(UserException.BIO_REQUIRED)))
         .andExpect(jsonPath("$.info", is("bio = null")))
         .andExpect(jsonPath("$.timestamp").exists());
@@ -196,15 +194,12 @@ public class UserControllerTest {
   @Test
   public void handleDeleteUser_invalidIdType_throwTypeMismatch() throws Exception {
 
-    String statusStr = "BAD_REQUEST";
-    String errorStr = "Invalid type mismatch";
-    String idPathVariable = "asdf";
-    String infoStr = "'id' parameter declared with invalid value of '" + idPathVariable + "'";
+    String infoStr = "'id' parameter declared with invalid value of 'asdf'";
 
     mockMvc.perform(delete("/users/asdf"))
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.status", is(statusStr)))
-        .andExpect(jsonPath("$.error", is(errorStr)))
+        .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.name())))
+        .andExpect(jsonPath("$.error", is(AppExceptionHandler.INVALID_TYPE)))
         .andExpect(jsonPath("$.info", is(infoStr)))
         .andExpect(jsonPath("$.timestamp").exists());
 
@@ -229,6 +224,7 @@ public class UserControllerTest {
         .when(svc)
         .deleteUserById(anyLong());
     String nonExistingId = "69";
+    String info = "No user found with id = " + nonExistingId;
 
     // act
     mockMvc.perform(
@@ -236,9 +232,9 @@ public class UserControllerTest {
 
         // assert
         .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.status", is("NOT_FOUND")))
-        .andExpect(jsonPath("$.error", is("User not found")))
-        .andExpect(jsonPath("$.info", is("some info")))
+        .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+        .andExpect(jsonPath("$.error", is(UserException.NOT_FOUND)))
+        .andExpect(jsonPath("$.info", is(info)))
         .andExpect(jsonPath("$.timestamp").exists());
   }
 
@@ -278,6 +274,7 @@ public class UserControllerTest {
     updatedUser.setBio("new bio");
     when(svc.updateUser(any())).thenThrow(new UserException(UserException.NOT_FOUND));
     String requestBody = jsonMapper.writeValueAsString(updatedUser);
+    String info = "Username '" + updatedUser.getUsername() + "' does not exists";
 
     // act
     mockMvc.perform(
@@ -287,9 +284,9 @@ public class UserControllerTest {
 
         // assert
         .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.status", is("NOT_FOUND")))
-        .andExpect(jsonPath("$.error", is("User not found")))
-        .andExpect(jsonPath("$.info", is("some info")))
+        .andExpect(jsonPath("$.status", is(HttpStatus.NOT_FOUND.name())))
+        .andExpect(jsonPath("$.error", is(UserException.NOT_FOUND)))
+        .andExpect(jsonPath("$.info", is(info)))
         .andExpect(jsonPath("$.timestamp").exists());
   }
 

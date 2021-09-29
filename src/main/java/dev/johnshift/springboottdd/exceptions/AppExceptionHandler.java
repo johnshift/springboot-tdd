@@ -23,7 +23,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 /** . */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
-public class AppControllerAdvice extends ResponseEntityExceptionHandler {
+public class AppExceptionHandler extends ResponseEntityExceptionHandler {
+
+  public static final String INVALID_TYPE = "Invalid type provided";
 
   /*
    * Override Default Exception Handlers here
@@ -39,22 +41,20 @@ public class AppControllerAdvice extends ResponseEntityExceptionHandler {
 
     BindingResult result = ex.getBindingResult();
     FieldError fieldError = result.getFieldError();
+
+    ErrorResponse errorResponse = new ErrorResponse();
+    errorResponse.setStatus(HttpStatus.BAD_REQUEST);
+    errorResponse.setError(INVALID_TYPE); // hide server dev errors
+
     if (fieldError != null) {
       String field = fieldError.getField();
       Object value = ex.getFieldValue(field);
 
-
-      ErrorResponse errorResponse = new ErrorResponse(
-          HttpStatus.BAD_REQUEST,
-          result.getAllErrors().get(0).getDefaultMessage(),
-          field + " = " + value
-      );
-
-      return handleExceptionInternal(ex, errorResponse, headers, status, request);
+      errorResponse.setError(ex.getAllErrors().get(0).getDefaultMessage());
+      errorResponse.setInfo(field + " = " + value);
     }
 
-    // Return default handleMethodArgumentNotValid response
-    return super.handleExceptionInternal(ex, null, headers, status, request);
+    return handleExceptionInternal(ex, errorResponse, headers, status, request);
   }
 
   /*
@@ -68,7 +68,7 @@ public class AppControllerAdvice extends ResponseEntityExceptionHandler {
   ) {
     return buildResponseEntity(new ErrorResponse(
       HttpStatus.BAD_REQUEST,
-      "Invalid type mismatch",
+      INVALID_TYPE,
       "'" + ex.getName() + "' parameter declared with invalid value of '" + ex.getValue() + "'"
     ));
   }

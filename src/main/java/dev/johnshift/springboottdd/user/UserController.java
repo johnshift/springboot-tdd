@@ -2,7 +2,6 @@ package dev.johnshift.springboottdd.user;
 
 import dev.johnshift.springboottdd.exceptions.ErrorResponse;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +17,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.WebRequest;
 
 /** ... */
 @RestController
@@ -36,22 +37,30 @@ public class UserController {
 
   /** ... */
   @GetMapping(path = "/users/{id}", produces = "application/json")
-  public UserDTO handleGetUser(@PathVariable(name = "id") @PositiveOrZero long id) {
+  public UserDTO handleGetUser(
+      @PathVariable(name = "id") @PositiveOrZero Long id,
+      WebRequest request
+  ) {
 
+    request.setAttribute("id", id, RequestAttributes.SCOPE_REQUEST);
     return svc.getUserById(id);
   }
 
   /** ... */
   @PostMapping("/users")
   @ResponseStatus(HttpStatus.CREATED)
-  public UserDTO handleCreateUser(@Valid @RequestBody UserDTO user) {
+  public UserDTO handleCreateUser(@Valid @RequestBody UserDTO user, WebRequest request) {
     return svc.createUser(user);
   }
 
   /** ... */
   @DeleteMapping("/users/{id}")
-  public ResponseEntity<Object> handleDeleteUser(@PathVariable(name = "id") @PositiveOrZero long id) {
+  public ResponseEntity<Object> handleDeleteUser(
+      @PathVariable(name = "id") @PositiveOrZero Long id,
+      WebRequest req
+  ) {
 
+    req.setAttribute("id", id, RequestAttributes.SCOPE_REQUEST);
     svc.deleteUserById(id);
 
     return new ResponseEntity<>(HttpStatus.OK);
@@ -60,7 +69,9 @@ public class UserController {
   /** Only `bio` field should be updateable. */
   @PutMapping("/users")
   @Validated(OnUpdate.class)
-  public UserDTO handleUpdateUser(@Valid @RequestBody UserDTO user) {
+  public UserDTO handleUpdateUser(@Valid @RequestBody UserDTO user, WebRequest req) {
+
+    req.setAttribute("username", user.getUsername(), RequestAttributes.SCOPE_REQUEST);
 
     return svc.updateUser(user);
   }
@@ -69,10 +80,32 @@ public class UserController {
   // ========================== USER EXCEPTIONS ===========================
   // ======================================================================
 
+  /** . */
   @ExceptionHandler(value = {UserException.class})
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ErrorResponse handlerAmbot(HttpServletRequest req, Exception ex) {
+  public ErrorResponse handlerAmbot(WebRequest req, Exception ex) {
 
-    return new ErrorResponse(HttpStatus.NOT_FOUND, "some info", ex);
+    int scope = RequestAttributes.SCOPE_REQUEST;
+
+    Object username = req.getAttribute("username", scope);
+    if (username != null) {
+      return new ErrorResponse(
+        HttpStatus.NOT_FOUND, 
+        "Username '" + username + "' does not exists", 
+        ex
+      );
+    } 
+    
+    Object id = req.getAttribute("id", scope);
+    if (id != null) {
+      return new ErrorResponse(
+        HttpStatus.NOT_FOUND, 
+        "No user found with id = " + id,
+        ex
+      );
+    }
+
+    return new ErrorResponse(HttpStatus.NOT_FOUND, "User does not exist in database", ex);
   }
+
 }
