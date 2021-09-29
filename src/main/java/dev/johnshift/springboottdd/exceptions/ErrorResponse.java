@@ -19,25 +19,6 @@ public class ErrorResponse {
     timestamp = new Date();
   }
 
-  public ErrorResponse(HttpStatus status) {
-    this();
-    this.status = status;
-  }
-
-  /** . */
-  public ErrorResponse(HttpStatus status, Throwable ex) {
-    this();
-    this.status = status;
-    this.error = ex.getMessage();
-  }
-
-  /** . */
-  public ErrorResponse(HttpStatus status, String message) {
-    this();
-    this.status = status;
-    this.error = message;
-  }
-
   /** . */
   public ErrorResponse(HttpStatus status, String message, String info) {
     this();

@@ -97,15 +97,11 @@ public class UserController {
     } 
     
     Object id = req.getAttribute("id", scope);
-    if (id != null) {
-      return new ErrorResponse(
-        HttpStatus.NOT_FOUND, 
-        "No user found with id = " + id,
-        ex
-      );
-    }
-
-    return new ErrorResponse(HttpStatus.NOT_FOUND, "User does not exist in database", ex);
+    return new ErrorResponse(
+      HttpStatus.NOT_FOUND, 
+      "No user found with id = " + id,
+      ex
+    );
   }
 
 }
