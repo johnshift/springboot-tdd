@@ -9,8 +9,8 @@ Workflow + best practices
 - [x] dev/prod separation deployments
 - [x] business logic in services only
 - [x] mapstruct dto
-- [ ] validation
-- [ ] controller-based exception handling
+- [x] validation
+- [x] controller-based exception handling
 
 ## Best Practices
 Code:
@@ -94,7 +94,7 @@ Tests:
   - [@ControllerAdvice StackOverflow](https://stackoverflow.com/a/50053782)
   - [Best Practices for REST Exceptions](https://www.baeldung.com/rest-api-error-handling-best-practices)
 - Validations:
-  - [Validation + Exception handling](https://reflectoring.io/bean-validation-with-spring-boot/)
+  - [Validation + Exception handling](https://reflectoring.io/bean-validation-with-**spring**-boot/)
   - [Are you using validations correctly?](https://medium.com/javarevisited/are-you-using-valid-and-validated-annotations-wrong-b4a35ac1bca4)
 - Security:
   - Limit Exposed Fields:

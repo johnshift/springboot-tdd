@@ -32,7 +32,7 @@ public class UserService {
   }
 
   /** . */
-  public void deleteUserById(long id) {
+  public void deleteUserById(Long id) {
 
     if (!checkUserExists(id)) {
       throw new UserException(UserException.NOT_FOUND);
