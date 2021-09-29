@@ -1,0 +1,17 @@
+name: TestCI
+on: [push]
+jobs:
+  test:
+    name: Unit-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+      - name: Maven package
+        run: mvn clean package
+      - name: Maven verify
+        run: mvn clean verify -DskipTests
