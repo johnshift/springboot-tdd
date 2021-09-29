@@ -1,7 +1,8 @@
 <h1 align="center"> SpringBoot TDD </h1>
-  <img width="160" height="25" src="https://github.com/johnshift/springboot-tdd/actions/workflows/unit-tests.yml/badge.svg">
-<div align="center">
 
+<div align="center">
+  <img style="margin-right:20px" src="https://github.com/johnshift/springboot-tdd/actions/workflows/unit-tests.yml/badge.svg">
+  <img src="https://github.com/johnshift/springboot-tdd/actions/workflows/integration-tests.yml/badge.svg">
 </div>
 
 ## Implementations
