@@ -1,4 +1,4 @@
-name: unit-tests
+name: Unit Test
 on: [push]
 jobs:
   test:

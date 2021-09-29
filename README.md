@@ -1,5 +1,10 @@
-# SpringBoot TDD
-Workflow + best practices
+<h1 align="center"> SpringBoot TDD </h1>
+  <img width="160" height="25" src="https://github.com/johnshift/springboot-tdd/actions/workflows/unit-tests.yml/badge.svg">
+<div align="center">
+
+</div>
+
+## Implementations
 - [x] feature-based folder
 - [x] formatter: eclipse-java-google-style
 - [x] checkstyle: IDE + google_checkstyle
