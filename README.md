@@ -1,7 +1,11 @@
 <h1 align="center"> SpringBoot TDD </h1>
 
 <div align="center">
+
+  <!-- <img style="margin-right:20px" src="https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml/badge.svg"> -->
+
   [![CI](https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml/badge.svg)](https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml)
+
   [![Coverage](.github/badges/jacoco.svg)](https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml)
   </span>
 </div>
