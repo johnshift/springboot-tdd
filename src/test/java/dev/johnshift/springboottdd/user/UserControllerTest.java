@@ -60,7 +60,7 @@ public class UserControllerTest {
   ObjectMapper jsonMapper = new ObjectMapper();
 
   @Test
-  public void handleGetUsers_returnUsers() throws Exception {
+  public void get_users_OK() throws Exception {
 
     // arrange
     when(svc.getAllUsers()).thenReturn(sampleUsers);
@@ -77,7 +77,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void handleGetUser_existingUser_then_returnUser() throws Exception {
+  public void get_user_OK() throws Exception {
     
     // arrange
     when(svc.getUserById(anyLong())).thenReturn(sampleUser);
@@ -93,7 +93,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void handleGetUser_nonExistingUser_throwUserException() throws Exception {
+  public void get_nonExistingUser_throw_NotFound() throws Exception {
 
     // arrange
     when(svc.getUserById(anyLong())).thenThrow(new UserException(UserException.NOT_FOUND));
@@ -111,7 +111,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void handleGetUser_invalidIdType_throwTypeMismatch() throws Exception {
+  public void get_user_byInvalidId_throw_BadRequest() throws Exception {
 
     String infoStr = "'id' parameter declared with invalid value of 'asdf'";
 
@@ -124,7 +124,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void handleCreateUser_returnCreatedUser() throws Exception {
+  public void post_user_OK() throws Exception {
 
     // arrange
     when(svc.createUser(any())).thenReturn(sampleUser);
@@ -144,7 +144,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void handleCreateUser_noUsername_usernameRequired() throws Exception {
+  public void post_user_noUsername_throw_UsernameRequired() throws Exception {
 
     // arrange
     UserDTO newUser = new UserDTO();
@@ -168,7 +168,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void handleCreateUser_noBio_bioRequired() throws Exception {
+  public void post_user_noBio_throw_BioRequired() throws Exception {
 
     // arrange
     UserDTO newUser = new UserDTO();
@@ -192,7 +192,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void handleDeleteUser_invalidIdType_throwTypeMismatch() throws Exception {
+  public void delete_user_invalidIdType_throw_BadRequest() throws Exception {
 
     String infoStr = "'id' parameter declared with invalid value of 'asdf'";
 
@@ -206,7 +206,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void handleDeleteUser_existingUser_OK() throws Exception {
+  public void delete_user_existingUser_OK() throws Exception {
     
     // act
     mockMvc.perform(
@@ -217,7 +217,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void handleDeleteUser_nonExistingUser_throwUserException() throws Exception {
+  public void delete_nonExistingUser_throw_NotFound() throws Exception {
 
     // arrange
     doThrow(new UserException(UserException.NOT_FOUND))
@@ -239,7 +239,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void handleUpdateUser_existingUser_onlyUpdateBioField() throws Exception {
+  public void update_user_OK() throws Exception {
 
     // arrange
     UserDTO updatedUser = new UserDTO();
@@ -265,7 +265,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void handleUpdateUser_nonExistingUser_throwUserException() throws Exception {
+  public void update_nonExistingUser_throw_NotFound() throws Exception {
 
     // arrange
     UserDTO updatedUser = new UserDTO();
@@ -291,7 +291,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void handleUpdateUser_noId_idRequired() throws Exception {
+  public void update_user_noId_throw_IdRequired() throws Exception {
 
     // arrange
     UserDTO updatedUser = new UserDTO();
@@ -316,7 +316,7 @@ public class UserControllerTest {
   }
   
   @Test
-  public void handleUpdateUser_noUsername_usernameRequired() throws Exception {
+  public void update_user_noUsername_throw_UsernameRequired() throws Exception {
 
     // arrange
     UserDTO updatedUser = new UserDTO();
@@ -340,7 +340,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void handleUpdateUser_noBio_bioRequired() throws Exception {
+  public void update_user_noBio_throw_BioRequired() throws Exception {
 
     // arrange
     UserDTO updatedUser = new UserDTO();
