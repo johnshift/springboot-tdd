@@ -24,12 +24,26 @@ public class ErrorResponse {
     this.status = status;
   }
 
-
   /** . */
   public ErrorResponse(HttpStatus status, Throwable ex) {
     this();
     this.status = status;
     this.error = ex.getMessage();
+  }
+
+  /** . */
+  public ErrorResponse(HttpStatus status, String message) {
+    this();
+    this.status = status;
+    this.error = message;
+  }
+
+  /** . */
+  public ErrorResponse(HttpStatus status, String message, String info) {
+    this();
+    this.status = status;
+    this.error = message;
+    this.info = info;
   }
 
   /** . */

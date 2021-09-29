@@ -3,9 +3,12 @@ package dev.johnshift.springboottdd.user;
 import dev.johnshift.springboottdd.exceptions.ErrorResponse;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-
 /** ... */
 @RestController
 @RequiredArgsConstructor
+@Validated
 public class UserController {
 
   private final UserService svc;
@@ -33,7 +36,7 @@ public class UserController {
 
   /** ... */
   @GetMapping(path = "/users/{id}", produces = "application/json")
-  public UserDTO handleGetUser(@PathVariable(name = "id") long id) {
+  public UserDTO handleGetUser(@PathVariable(name = "id") @PositiveOrZero long id) {
 
     return svc.getUserById(id);
   }
@@ -41,13 +44,13 @@ public class UserController {
   /** ... */
   @PostMapping("/users")
   @ResponseStatus(HttpStatus.CREATED)
-  public UserDTO handleCreateUser(@RequestBody UserDTO user) {
+  public UserDTO handleCreateUser(@Valid @RequestBody UserDTO user) {
     return svc.createUser(user);
   }
 
   /** ... */
   @DeleteMapping("/users/{id}")
-  public ResponseEntity<Object> handleDeleteUser(@PathVariable(name = "id") long id) {
+  public ResponseEntity<Object> handleDeleteUser(@PathVariable(name = "id") @PositiveOrZero long id) {
 
     svc.deleteUserById(id);
 
@@ -56,7 +59,8 @@ public class UserController {
 
   /** Only `bio` field should be updateable. */
   @PutMapping("/users")
-  public UserDTO handleUpdateUser(@RequestBody UserDTO user) {
+  @Validated(OnUpdate.class)
+  public UserDTO handleUpdateUser(@Valid @RequestBody UserDTO user) {
 
     return svc.updateUser(user);
   }

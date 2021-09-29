@@ -15,6 +15,8 @@ Workflow + best practices
 ## Best Practices
 Code:
 - Only services are imported into `RestControllers`. No logic, validation or repositories involved.
+- Do not write validations by hand. Use `spring-boot-starter-validation` instead
+- Only `Validate` DTO's. This saves network resources if data not in proper format
 - Request/Response returned should only be DTO's (avoid 1:1 mapping of db entities and json)  
   Use explicit custom/generic mapping for request/response.  
   The goal is to avoid sending very large models and reduce API calls
@@ -92,6 +94,7 @@ Tests:
   - [@ControllerAdvice StackOverflow](https://stackoverflow.com/a/50053782)
   - [Best Practices for REST Exceptions](https://www.baeldung.com/rest-api-error-handling-best-practices)
 - Validations:
+  - [Validation + Exception handling](https://reflectoring.io/bean-validation-with-spring-boot/)
   - [Are you using validations correctly?](https://medium.com/javarevisited/are-you-using-valid-and-validated-annotations-wrong-b4a35ac1bca4)
 - Security:
   - Limit Exposed Fields:
