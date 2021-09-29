@@ -1,14 +1,15 @@
 <h1 align="center"> SpringBoot TDD </h1>
 
-<div align="center">
+<p align="center">
 
   <!-- <img style="margin-right:20px" src="https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml/badge.svg"> -->
-
-  [![CI](https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml/badge.svg)](https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml)
-
-  [![Coverage](.github/badges/jacoco.svg)](https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml)
-  </span>
-</div>
+  <a href="https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml">
+    <img style="margin-right:30px" src="https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml/badge.svg"/>
+  </a>
+  <a href="https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml">
+    <img style="margin-right:20px" src=".github/badges/jacoco.svg"/>
+  </a>
+</p>
 
 ## Implementations
 - [x] feature-based folder
