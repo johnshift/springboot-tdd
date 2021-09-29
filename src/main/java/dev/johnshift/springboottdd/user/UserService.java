@@ -46,7 +46,11 @@ public class UserService {
    */
   public UserDTO updateUser(UserDTO userDTO) {
 
-    long id = userDTO.getId();
+    Long id = userDTO.getId();
+
+    if (id == null) {
+      throw new UserException(UserException.ID_REQUIRED);
+    }
 
     if (!checkUserExists(id)) {
       throw new UserException(UserException.NOT_FOUND);
