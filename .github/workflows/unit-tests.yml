@@ -1,4 +1,4 @@
-name: TestCI
+name: unit-tests
 on: [push]
 jobs:
   test:
@@ -11,7 +11,5 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '11'
-      - name: Maven package
-        run: mvn clean package
-      - name: Maven verify
-        run: mvn clean verify -DskipTests
+      - name: Run unit-tests
+        run: mvn clean test
