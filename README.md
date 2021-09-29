@@ -1,12 +1,26 @@
 <h1 align="center"> SpringBoot TDD </h1>
 
 <p align="center">
-  <a  style="margin-right:30px" href="https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml">
+  <a href="https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml">
     <img src="https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml/badge.svg"/>
   </a>
   <a href="https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml">
-    <img style="margin-right:20px" src=".github/badges/jacoco.svg"/>
+    <img src=".github/badges/jacoco.svg"/>
   </a>
+
+  <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/johnshift/springboot-tdd?logo=github">
+  <img src="https://img.shields.io/badge/Made%20with-SpringBoot-green.svg">
+
+  <br/>
+
+
+  <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/johnshift/springboot-tdd">
+  <img alt="Lines of code" src="https://img.shields.io/tokei/lines/github/johnshift/springboot-tdd?label=total%20lines%20of%20code">
+  
+  <img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/johnshift/springboot-tdd">
+  
+
+
 </p>
 
 ## Implementations
@@ -111,3 +125,10 @@ Tests:
   - Limit Exposed Fields:
     - [Exposing Entity Using DTO](https://auth0.com/blog/automatically-mapping-dto-to-entity-on-spring-boot-apis/#DTOs-and-Spring-Boot-APIs)
     - [Sonarlint DTO Vulnerability](https://rules.sonarsource.com/java/tag/spring/RSPEC-4684)
+
+## stickers (reference)
+
+<div align="center">
+  <img src="https://github-readme-stats.vercel.app/api?username=johnshift">
+  <img src="https://github-readme-stats.vercel.app/api/top-langs?username=johnshift">
+</div>
