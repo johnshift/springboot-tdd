@@ -1,10 +1,10 @@
 <h1 align="center"> SpringBoot TDD </h1>
 
 <p align="center">
-  <a href="https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml">
-    <img src="https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml/badge.svg"/>
+  <a href="https://github.com/johnshift/springboot-tdd/actions/workflows/cicd.yml">
+    <img src="https://github.com/johnshift/springboot-tdd/actions/workflows/cicd.yml/badge.svg"/>
   </a>
-  <a href="https://github.com/johnshift/springboot-tdd/actions/workflows/ci.yml">
+  <a href="https://github.com/johnshift/springboot-tdd/actions/workflows/cicd.yml">
     <img src=".github/badges/jacoco.svg"/>
   </a>
 
