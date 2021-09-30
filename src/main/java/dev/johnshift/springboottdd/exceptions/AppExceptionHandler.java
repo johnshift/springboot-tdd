@@ -46,13 +46,11 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
     errorResponse.setStatus(HttpStatus.BAD_REQUEST);
     errorResponse.setError(INVALID_TYPE); // hide server dev errors
 
-    if (fieldError != null) {
-      String field = fieldError.getField();
-      Object value = ex.getFieldValue(field);
+    String field = fieldError.getField();
+    Object value = ex.getFieldValue(field);
 
-      errorResponse.setError(ex.getAllErrors().get(0).getDefaultMessage());
-      errorResponse.setInfo(field + " = " + value);
-    }
+    errorResponse.setError(ex.getAllErrors().get(0).getDefaultMessage());
+    errorResponse.setInfo(field + " = " + value);
 
     return handleExceptionInternal(ex, errorResponse, headers, status, request);
   }

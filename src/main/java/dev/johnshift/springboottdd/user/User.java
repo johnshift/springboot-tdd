@@ -32,24 +32,12 @@ public class User {
   private String bio;
 
   // mapper dto -> user
-  public User(UserDto dto) {
-    this(dto.getId(), dto.getUsername(), dto.getBio());
-  }
-
-  // mapper dto -> user
   public static User of(UserDto dto) {
     return new User(dto.getId(), dto.getUsername(), dto.getBio());
   }
 
-
-  /** . */
-  public UserDto toDTO() {
-
-    return new UserDto(id, username, bio);
-  }
-
   /** maps dto list -> user list. */
-  public static List<User> ofList(List<UserDto> dtos) {
+  public static List<User> of(List<UserDto> dtos) {
     List<User> users = new ArrayList<>();
 
     for (UserDto dto : dtos) {
