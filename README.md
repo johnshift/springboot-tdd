@@ -47,6 +47,11 @@ Code:
   The goal is to avoid sending very large models and reduce API calls
 - Avoid `@Autowired` and use `@RequiredArgsConstructor` and `private final`  
   This provides more room for unit testing.
+- Take note when `@Data` or `@ToString` on `@Entity` with any relationship like `@OneToMany`  
+  Make sure to include `@ToString.Exclude` on that specific field to fix conflicts
+- Create a `lombig.config` file on the root directory with contents  
+  `config.stopBubbling = true` and `lombok.addLombokGeneratedAnnotation = true`
+  to include `@lombok.Generated` annotations for test coverage in jacoco
 - `Services` should contain all business logic
 - `DTO/Entity` conversions should happen in `Services`
 - `Repositories` should contain all predefined/custom DB logic
@@ -104,6 +109,12 @@ Tests:
 ## notes
 - put `"coverage-gutters.coverageReportFileName": "target/site/jacoco/index.html"`  
   in `vscode settings.json` when developing in Java to enable coverage gutters
+
+## lombok notice
+- exclude id fields from hashcode/equals
+- exclude association fields which are not managed in given entity from hashcode/equals
+- exclude all lazy loaded fields from toString method
+- exclude fields possibly causing circular references from toString method
 
 ## useful guides
 - Testing: 
