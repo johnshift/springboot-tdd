@@ -30,14 +30,14 @@ public class UserController {
 
   /** ... */
   @GetMapping("/users")
-  public List<UserDTO> handleGetUsers() {
+  public List<UserDto> handleGetUsers() {
 
     return svc.getAllUsers();
   }
 
   /** ... */
   @GetMapping(path = "/users/{id}", produces = "application/json")
-  public UserDTO handleGetUser(
+  public UserDto handleGetUser(
       @PathVariable(name = "id") @PositiveOrZero Long id,
       WebRequest request
   ) {
@@ -49,7 +49,7 @@ public class UserController {
   /** ... */
   @PostMapping("/users")
   @ResponseStatus(HttpStatus.CREATED)
-  public UserDTO handleCreateUser(@Valid @RequestBody UserDTO user, WebRequest request) {
+  public UserDto handleCreateUser(@Valid @RequestBody UserDto user, WebRequest request) {
     return svc.createUser(user);
   }
 
@@ -69,7 +69,7 @@ public class UserController {
   /** Only `bio` field should be updateable. */
   @PutMapping("/users")
   @Validated(OnUpdate.class)
-  public UserDTO handleUpdateUser(@Valid @RequestBody UserDTO user, WebRequest req) {
+  public UserDto handleUpdateUser(@Valid @RequestBody UserDto user, WebRequest req) {
 
     req.setAttribute("username", user.getUsername(), RequestAttributes.SCOPE_REQUEST);
 

@@ -124,7 +124,7 @@ public class UserIT {
   @Test
   public void post_user_OK() throws Exception {
     
-    UserDTO user = new UserDTO();
+    UserDto user = new UserDto();
     user.setUsername("johnshift");
     user.setBio("looking for a job");
 
@@ -143,12 +143,12 @@ public class UserIT {
 
     // confirm via get
     Long id = 4L; // only 3 rows were pre-added, id = 4 will be next
-    UserDTO createdUser = webClient
+    UserDto createdUser = webClient
         .get()
         .uri("http://localhost:" + port + "/users/" + id)
         .accept(MediaType.APPLICATION_JSON)
         .retrieve()
-        .bodyToMono(UserDTO.class)
+        .bodyToMono(UserDto.class)
         .block();
 
     assertEquals(id, createdUser.getId());
@@ -159,7 +159,7 @@ public class UserIT {
   @Test
   public void post_user_noUsername_throw_RequiredUsername() throws Exception {
     
-    UserDTO user = new UserDTO();
+    UserDto user = new UserDto();
     user.setBio("looking for a job");
 
     webTestClient
@@ -181,7 +181,7 @@ public class UserIT {
   @Test
   public void post_user_noBio_throw_RequiredBio() throws Exception {
     
-    UserDTO user = new UserDTO();
+    UserDto user = new UserDto();
     user.setUsername("johnshift");
 
     webTestClient
@@ -270,12 +270,12 @@ public class UserIT {
   public void put_user_should_OnlyChangeBio() throws Exception {
     
     // retrieve user
-    UserDTO user = webClient
+    UserDto user = webClient
         .get()
         .uri("http://localhost:" + port + "/users/1")
         .accept(MediaType.APPLICATION_JSON)
         .retrieve()
-        .bodyToMono(UserDTO.class)
+        .bodyToMono(UserDto.class)
         .block();
 
     // update user
@@ -317,10 +317,7 @@ public class UserIT {
     String username = "johnshift";
     final String info = "Username '" + username + "' does not exists";
 
-    UserDTO user = new UserDTO();
-    user.setId(nonExistingId);
-    user.setUsername("johnshift");
-    user.setBio("looking for a job");
+    UserDto user = new UserDto(nonExistingId, "johnshift", "looking for a job");
 
     webTestClient
       .put()
@@ -341,7 +338,7 @@ public class UserIT {
   @Test
   public void put_user_noId_throw_RequiredID() throws Exception {
 
-    UserDTO user = new UserDTO();
+    UserDto user = new UserDto();
     user.setUsername("johnshift");
     user.setBio("looking for a job");
 
@@ -364,7 +361,7 @@ public class UserIT {
   @Test
   public void put_user_noUsername_throw_RequiredUsername() throws Exception {
 
-    UserDTO user = new UserDTO();
+    UserDto user = new UserDto();
     user.setId(1L);
     user.setBio("looking for a job");
 
@@ -387,7 +384,7 @@ public class UserIT {
   @Test
   public void put_user_noBio_throw_RequiredBio() throws Exception {
 
-    UserDTO user = new UserDTO();
+    UserDto user = new UserDto();
     user.setId(1L);
     user.setUsername("johnshift");
 

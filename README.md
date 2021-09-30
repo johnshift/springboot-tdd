@@ -32,7 +32,7 @@
 - [x] dockerized mysql for tests
 - [x] dev/prod separation deployments
 - [x] business logic in services only
-- [x] mapstruct dto
+- [x] explicit mapping dto:entity (mapstruct yields unreachable code)
 - [x] validation
 - [x] controller-based exception handling
 - [x] ci + coverage stickers
@@ -123,7 +123,6 @@ Tests:
   - [Unit Test Naming Best Practices](https://stackoverflow.com/q/155436)
 - Architecture:
   - [DTO Pattern](https://www.baeldung.com/java-dto-pattern)
-  - [Mapstruct Quick Guide](https://www.baeldung.com/mapstruct)
 - Exceptions: 
   - [Spring MVC Exception Handling](https://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc), [Same Baldeung Guide](https://www.baeldung.com/exception-handling-for-rest-with-spring)
   - [@ControllerAdvice Guide](https://dzone.com/articles/best-practice-for-exception-handling-in-spring-boo)

@@ -2,7 +2,6 @@ package dev.johnshift.springboottdd.user;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
 /** ... */
@@ -10,31 +9,29 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
-  private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
-
   private final UserRepository userRepository;
 
   /** ... */
-  public List<UserDTO> getAllUsers() {
+  public List<UserDto> getAllUsers() {
 
-    List<UserEntity> userEntities = userRepository.findAll();
+    List<User> users = userRepository.findAll();
 
-    return mapper.toDTOs(userEntities);
+    return UserDto.of(users);
   }
 
   /** . */
-  public UserDTO createUser(UserDTO userDTO) {
+  public UserDto createUser(UserDto dto) {
     
-    UserEntity userEntity = userRepository.save(mapper.toEntity(userDTO));
+    User user = userRepository.save(User.of(dto));
     // todo: throw exception if save failed
 
-    return mapper.toDTO(userEntity);
+    return UserDto.of(user);
   }
 
   /** . */
   public void deleteUserById(Long id) {
 
-    if (!checkUserExists(id)) {
+    if (!userRepository.findById(id).isPresent()) {
       throw new UserException(UserException.NOT_FOUND);
     }
 
@@ -44,34 +41,23 @@ public class UserService {
   /** 
    * Only `bio` field should be updateable.
    */
-  public UserDTO updateUser(UserDTO userDTO) {
+  public UserDto updateUser(UserDto dto) {
 
-    Long id = userDTO.getId();
-
-    if (!checkUserExists(id)) {
-      throw new UserException(UserException.NOT_FOUND);
-    }
-
-    UserEntity userEntity = userRepository.findById(id)
+    User user = userRepository.findById(dto.getId())
         .orElseThrow(() -> new UserException(UserException.NOT_FOUND));
 
-    userEntity.setBio(userDTO.getBio());
-    userRepository.save(userEntity);
+    // only update bio
+    user.setBio(dto.getBio());
 
-    return mapper.toDTO(userEntity);
+    return UserDto.of(userRepository.save(user));
   }
 
   /** . */
-  public UserDTO getUserById(long id) {
+  public UserDto getUserById(long id) {
 
-    UserEntity userEntity = userRepository.findById(id)
+    User user = userRepository.findById(id)
         .orElseThrow(() -> new UserException(UserException.NOT_FOUND));
 
-    return mapper.toDTO(userEntity);
-  }
-
-  /** . */
-  public boolean checkUserExists(long id) {
-    return userRepository.findById(id).isPresent();
+    return UserDto.of(user);
   }
 }

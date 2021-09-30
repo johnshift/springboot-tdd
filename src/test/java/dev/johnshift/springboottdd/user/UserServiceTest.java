@@ -8,11 +8,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
+import dev.johnshift.springboottdd.utils.Generator;
 import java.util.List;
 import java.util.Optional;
-import org.jeasy.random.EasyRandom;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,52 +27,38 @@ public class UserServiceTest {
   @InjectMocks
   UserService svc;
 
-  static UserEntity sampleUserEntity;
-  static List<UserEntity> sampleUserEntities;
-  static UserDTO sampleUserDTO;
-
-  @BeforeAll
-  static void init() {
-
-    EasyRandom easyRandom = new EasyRandom();
-    sampleUserEntity = easyRandom.nextObject(UserEntity.class);
-    sampleUserDTO = easyRandom.nextObject(UserDTO.class);
-
-    // need positive value ids
-    sampleUserEntity.setId(Math.abs(easyRandom.nextLong()));
-    sampleUserDTO.setId(Math.abs(easyRandom.nextLong()));
-
-    sampleUserEntities = Arrays.asList(sampleUserEntity);
-  }
+  static final User user = Generator.generateUser();
+  static final List<User> users = Generator.generateUsers();
+  static final UserDto userDto = Generator.generateUserDto();
 
   @Test
-  public void getAllUsers_returnUserDTOs() {
+  public void getAllUsers_OK() {
 
     // arrange
-    when(userRepository.findAll()).thenReturn(sampleUserEntities);
+    when(userRepository.findAll()).thenReturn(users);
 
     // act
-    List<UserDTO> dtos = svc.getAllUsers();
+    List<UserDto> dtos = svc.getAllUsers();
 
     // assert
-    assertEquals(sampleUserEntities.get(0).getId(), dtos.get(0).getId());
-    assertEquals(sampleUserEntities.get(0).getBio(), dtos.get(0).getBio());
-    assertEquals(sampleUserEntities.get(0).getUsername(), dtos.get(0).getUsername());
+    assertEquals(users.get(0).getId(), dtos.get(0).getId());
+    assertEquals(users.get(0).getBio(), dtos.get(0).getBio());
+    assertEquals(users.get(0).getUsername(), dtos.get(0).getUsername());
   }
 
   @Test
-  public void createUser_returnUserDTO() {
+  public void createUser_OK() {
 
     // arrange
-    UserEntity userEntity = new UserEntity();
+    User userEntity = new User();
     Long assignedId = 1L; // assume db assign id = 1
     userEntity.setId(assignedId); 
-    userEntity.setBio(sampleUserEntity.getBio());
-    userEntity.setUsername(sampleUserEntity.getUsername());
+    userEntity.setBio(user.getBio());
+    userEntity.setUsername(user.getUsername());
     when(userRepository.save(any())).thenReturn(userEntity);
 
     // act
-    UserDTO dto = svc.createUser(sampleUserDTO);
+    UserDto dto = svc.createUser(userDto);
 
     // assert
     assertNotNull(dto.getId());
@@ -87,18 +71,18 @@ public class UserServiceTest {
   public void deleteUserById_OK() {
 
     // arrange
-    when(userRepository.findById(sampleUserEntity.getId())).thenReturn(Optional.of(sampleUserEntity));
+    when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
     // act
     // assert
-    assertDoesNotThrow(() -> svc.deleteUserById(sampleUserEntity.getId()));
+    assertDoesNotThrow(() -> svc.deleteUserById(user.getId()));
   }
 
   @Test
-  public void given_userNotFound_when_deleteUserById_then_throwUserException() {
+  public void deleteUserById_userNotFound_throw_UserException() {
 
     // arrange
-    long id = sampleUserEntity.getId();
+    long id = user.getId();
     // assume db can't find the id
     when(userRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -108,34 +92,31 @@ public class UserServiceTest {
   }
 
   @Test
-  public void should_Succeed_When_UpdateUser() {
+  public void updateUser_OK() throws Exception {
 
     // arrange
-    long id = sampleUserEntity.getId();
-    when(userRepository.findById(id)).thenReturn(Optional.of(sampleUserEntity));
-    UserDTO updatedUser = new UserDTO();
-    updatedUser.setId(sampleUserEntity.getId());
-    updatedUser.setUsername(sampleUserEntity.getUsername());
-    updatedUser.setBio("new bio");
+    when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+    when(userRepository.save(any())).thenReturn(user);
+    UserDto dtoReq = UserDto.of(user);
 
-    // act
-    UserDTO dto = svc.updateUser(updatedUser);
+    // // act
+    UserDto dto = svc.updateUser(dtoReq);
     
-    // assert
-    assertEquals(updatedUser.getId(), dto.getId());
-    assertEquals(updatedUser.getUsername(), dto.getUsername());
-    assertEquals(updatedUser.getBio(), dto.getBio());
+    // // assert
+    assertEquals(user.getId(), dto.getId());
+    assertEquals(user.getUsername(), dto.getUsername());
+    assertEquals(user.getBio(), dto.getBio());
   }
   
   @Test
   public void given_userNotFound_when_updateUser_then_throwUserException() {
     
     // arrange
-    long id = sampleUserEntity.getId();
+    long id = user.getId();
     when(userRepository.findById(id)).thenReturn(Optional.empty());
-    UserDTO updatedUser = new UserDTO();
-    updatedUser.setId(sampleUserEntity.getId());
-    updatedUser.setUsername(sampleUserEntity.getUsername());
+    UserDto updatedUser = new UserDto();
+    updatedUser.setId(user.getId());
+    updatedUser.setUsername(user.getUsername());
     updatedUser.setBio("new bio");
 
     // act
@@ -144,47 +125,19 @@ public class UserServiceTest {
   }
 
   @Test
-  public void given_userNotFound_when_checkUserExists_then_returnFalse() {
-    
-    // arrange
-    long id = 69L;
-    when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
-
-    // act
-    boolean exists = svc.checkUserExists(id);
-
-    // assert
-    assertEquals(false, exists);
-  }
-
-  @Test
-  public void given_userExists_when_checkUserExists_then_returnTrue() {
-    
-    // arrange
-    long id = sampleUserEntity.getId();
-    when(userRepository.findById(anyLong())).thenReturn(Optional.of(sampleUserEntity));
-
-    // act
-    boolean exists = svc.checkUserExists(id);
-
-    // assert
-    assertEquals(true, exists);
-  }
-
-  @Test
   public void given_userExists_when_getUserById_then_returnUser() {
 
     // arrange
-    long id = sampleUserEntity.getId();
-    when(userRepository.findById(anyLong())).thenReturn(Optional.of(sampleUserEntity));
+    long id = user.getId();
+    when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
 
     // act
-    UserDTO dto = svc.getUserById(id);
+    UserDto dto = svc.getUserById(id);
 
     // assert
-    assertEquals(sampleUserEntity.getId(), dto.getId());
-    assertEquals(sampleUserEntity.getBio(), dto.getBio());
-    assertEquals(sampleUserEntity.getUsername(), dto.getUsername());
+    assertEquals(user.getId(), dto.getId());
+    assertEquals(user.getBio(), dto.getBio());
+    assertEquals(user.getUsername(), dto.getUsername());
   }
 
   @Test

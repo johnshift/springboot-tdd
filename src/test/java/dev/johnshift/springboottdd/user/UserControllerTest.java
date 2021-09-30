@@ -14,10 +14,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.johnshift.springboottdd.exceptions.AppExceptionHandler;
-import java.util.Arrays;
+import dev.johnshift.springboottdd.utils.Generator;
 import java.util.List;
-import org.jeasy.random.EasyRandom;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,19 +40,9 @@ public class UserControllerTest {
   @MockBean
   UserService svc;
 
-  static UserDTO sampleUser;
-  static List<UserDTO> sampleUsers;
-
-  @BeforeAll
-  static void init() {
-    EasyRandom easyRandom = new EasyRandom();
-
-    // need positive value ids
-    sampleUser = easyRandom.nextObject(UserDTO.class);
-    sampleUser.setId(Math.abs(easyRandom.nextLong()));
-
-    sampleUsers = Arrays.asList(sampleUser);
-  }
+  static final User user = Generator.generateUser();
+  static final List<User> users = Generator.generateUsers();
+  static final UserDto userDto = Generator.generateUserDto();
 
   @Autowired
   ObjectMapper jsonMapper = new ObjectMapper();
@@ -63,7 +51,8 @@ public class UserControllerTest {
   public void get_users_OK() throws Exception {
 
     // arrange
-    when(svc.getAllUsers()).thenReturn(sampleUsers);
+    // when(svc.getAllUsers()).thenReturn(users);
+    when(svc.getAllUsers()).thenAnswer(i -> users);
 
     // act
     mockMvc.perform(get("/users"))
@@ -71,25 +60,25 @@ public class UserControllerTest {
         // assert
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.length()", is(1)))
-        .andExpect(jsonPath("$.[0].id", is(sampleUsers.get(0).getId())))
-        .andExpect(jsonPath("$.[0].bio", is(sampleUsers.get(0).getBio())))
-        .andExpect(jsonPath("$.[0].username", is(sampleUsers.get(0).getUsername())));
+        .andExpect(jsonPath("$.[0].id", is(users.get(0).getId())))
+        .andExpect(jsonPath("$.[0].bio", is(users.get(0).getBio())))
+        .andExpect(jsonPath("$.[0].username", is(users.get(0).getUsername())));
   }
 
   @Test
   public void get_user_OK() throws Exception {
     
     // arrange
-    when(svc.getUserById(anyLong())).thenReturn(sampleUser);
+    when(svc.getUserById(user.getId())).thenAnswer(i -> userDto);
 
     // act
-    mockMvc.perform(get("/users/" + sampleUser.getId()))
+    mockMvc.perform(get("/users/" + user.getId()))
 
         // assert
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id", is(sampleUser.getId())))
-        .andExpect(jsonPath("$.bio", is(sampleUser.getBio())))
-        .andExpect(jsonPath("$.username", is(sampleUser.getUsername())));
+        .andExpect(jsonPath("$.id", is(user.getId())))
+        .andExpect(jsonPath("$.bio", is(user.getBio())))
+        .andExpect(jsonPath("$.username", is(user.getUsername())));
   }
 
   @Test
@@ -97,10 +86,10 @@ public class UserControllerTest {
 
     // arrange
     when(svc.getUserById(anyLong())).thenThrow(new UserException(UserException.NOT_FOUND));
-    String info = "No user found with id = " + sampleUser.getId();
+    String info = "No user found with id = " + user.getId();
 
     // act
-    mockMvc.perform(get("/users/{id}", sampleUser.getId().toString()))
+    mockMvc.perform(get("/users/{id}", user.getId().toString()))
 
         // assert
         .andExpect(status().isNotFound())
@@ -127,8 +116,8 @@ public class UserControllerTest {
   public void post_user_OK() throws Exception {
 
     // arrange
-    when(svc.createUser(any())).thenReturn(sampleUser);
-    String requestBody = jsonMapper.writeValueAsString(sampleUser);
+    when(svc.createUser(any(UserDto.class))).thenAnswer(i -> userDto);
+    String requestBody = jsonMapper.writeValueAsString(userDto);
 
     // act
     mockMvc.perform(
@@ -138,16 +127,16 @@ public class UserControllerTest {
 
         // assert
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.id", is(sampleUser.getId())))
-        .andExpect(jsonPath("$.username", is(sampleUser.getUsername())))
-        .andExpect(jsonPath("$.bio", is(sampleUser.getBio())));
+        .andExpect(jsonPath("$.id", is(user.getId())))
+        .andExpect(jsonPath("$.username", is(user.getUsername())))
+        .andExpect(jsonPath("$.bio", is(user.getBio())));
   }
 
   @Test
   public void post_user_noUsername_throw_UsernameRequired() throws Exception {
 
     // arrange
-    UserDTO newUser = new UserDTO();
+    UserDto newUser = new UserDto();
     newUser.setBio("created bio");
     String requestBody = jsonMapper.writeValueAsString(newUser);
     when(svc.createUser(any())).thenReturn(newUser);
@@ -171,7 +160,7 @@ public class UserControllerTest {
   public void post_user_noBio_throw_BioRequired() throws Exception {
 
     // arrange
-    UserDTO newUser = new UserDTO();
+    UserDto newUser = new UserDto();
     newUser.setUsername("created username");
     String requestBody = jsonMapper.writeValueAsString(newUser);
     when(svc.createUser(any())).thenReturn(newUser);
@@ -210,7 +199,7 @@ public class UserControllerTest {
     
     // act
     mockMvc.perform(
-        delete("/users/{id}", sampleUser.getId().toString()))
+        delete("/users/{id}", user.getId().toString()))
 
         // assert
         .andExpect(status().isOk());
@@ -242,9 +231,9 @@ public class UserControllerTest {
   public void update_user_OK() throws Exception {
 
     // arrange
-    UserDTO updatedUser = new UserDTO();
-    updatedUser.setId(sampleUser.getId());
-    updatedUser.setUsername(sampleUser.getUsername());
+    UserDto updatedUser = new UserDto();
+    updatedUser.setId(user.getId());
+    updatedUser.setUsername(user.getUsername());
     updatedUser.setBio("new bio");
     when(svc.updateUser(any())).thenReturn(updatedUser);
     String requestBody = jsonMapper.writeValueAsString(updatedUser);
@@ -258,8 +247,8 @@ public class UserControllerTest {
         // assert
         .andExpect(status().isOk())
         // should not change id, username fields
-        .andExpect(jsonPath("$.id", is(sampleUser.getId())))
-        .andExpect(jsonPath("$.username", is(sampleUser.getUsername())))
+        .andExpect(jsonPath("$.id", is(user.getId())))
+        .andExpect(jsonPath("$.username", is(user.getUsername())))
         // should only update bio field
         .andExpect(jsonPath("$.bio", is(updatedUser.getBio())));
   }
@@ -268,9 +257,9 @@ public class UserControllerTest {
   public void update_nonExistingUser_throw_NotFound() throws Exception {
 
     // arrange
-    UserDTO updatedUser = new UserDTO();
-    updatedUser.setId(sampleUser.getId());
-    updatedUser.setUsername(sampleUser.getUsername());
+    UserDto updatedUser = new UserDto();
+    updatedUser.setId(user.getId());
+    updatedUser.setUsername(user.getUsername());
     updatedUser.setBio("new bio");
     when(svc.updateUser(any())).thenThrow(new UserException(UserException.NOT_FOUND));
     String requestBody = jsonMapper.writeValueAsString(updatedUser);
@@ -294,7 +283,7 @@ public class UserControllerTest {
   public void update_user_noId_throw_IdRequired() throws Exception {
 
     // arrange
-    UserDTO updatedUser = new UserDTO();
+    UserDto updatedUser = new UserDto();
     updatedUser.setUsername("updated username");
     updatedUser.setBio("updated bio");
     String requestBody = jsonMapper.writeValueAsString(updatedUser);
@@ -319,9 +308,9 @@ public class UserControllerTest {
   public void update_user_noUsername_throw_UsernameRequired() throws Exception {
 
     // arrange
-    UserDTO updatedUser = new UserDTO();
-    updatedUser.setId(sampleUser.getId());
-    updatedUser.setBio(sampleUser.getBio());
+    UserDto updatedUser = new UserDto();
+    updatedUser.setId(user.getId());
+    updatedUser.setBio(user.getBio());
     String requestBody = jsonMapper.writeValueAsString(updatedUser);
     when(svc.createUser(any())).thenReturn(updatedUser);
 
@@ -343,9 +332,9 @@ public class UserControllerTest {
   public void update_user_noBio_throw_BioRequired() throws Exception {
 
     // arrange
-    UserDTO updatedUser = new UserDTO();
-    updatedUser.setId(sampleUser.getId());
-    updatedUser.setUsername(sampleUser.getUsername());
+    UserDto updatedUser = new UserDto();
+    updatedUser.setId(user.getId());
+    updatedUser.setUsername(user.getUsername());
     String requestBody = jsonMapper.writeValueAsString(updatedUser);
     when(svc.createUser(any())).thenReturn(updatedUser);
 
